@@ -2,9 +2,9 @@ import discord
 import asyncio
 import time
 from discord.ext import commands
-token = ""
+token = "NzcyMTYwMTg2ODQ4MjQ3ODQ4.X52oNg.m03Eaiku9hFxsjp1bGSXhzzXxIU"
 
-ID = 
+ID = 692572871322632222
 messaged = joined = 0
 
 #____________________________________________________________
@@ -22,11 +22,11 @@ async def update_stats():
             messaged = 0 #reset variables
             joined = 0
 
-            await asyncio.sleep(5)
+            await asyncio.sleep(600)
 
         except Exception as e:
             print(e)
-            await asyncio.sleep(120) #2 minutes
+            await asyncio.sleep(600) #10 minutes
 
 @client.event
 async def on_member_join(member):
@@ -42,20 +42,25 @@ async def on_message(message):
     global messaged
     messaged = messaged + 1
     id = client.get_guild(ID)
-    channels = ["commands"]
+    channels = ["commands", "#nguyenthm-commands", "#nguyeneral"]
     valid_users = ["jshi#9154"]
+    #if str(message.channel) in channels and str(message.author) in valid_users: #if the message is in the commands channel and in the command channel, the messanger/author is one of the valid users, then it's true
+    if message.content.find("!hello") != -1: #finds it
+        await message.channel.send("Hi") #sends it
+    elif message.content == "!users": #sees if the message is the same
+        await message.channel.send(f"""# of Members: {id.member_count}""")
 
-    if str(message.channel) in channels and str(message.author) in valid_users: #if the message is in the commands channel and in the command channel, the messanger/author is one of the valid users, then it's true
-        if message.content.find("!hello") != -1: #finds it
-            await message.channel.send("Hi") #sends it
-        elif message.content == "!users": #sees if the message is the same
-            await message.channel.send(f"""# of Members: {id.member_count}""")
-        ##############################
-        elif message.content == "!Die":
-            await message.channel.send("Plz wait")
-            await asyncio.sleep(10) #waits for 10 seconds
-            await message.channel.send("x-|")
-        ###############################
+
+    ##############################
+    elif message.content == "!Die":
+        await message.channel.send("Plz wait")
+        await asyncio.sleep(6) #waits for 10 seconds
+        await message.channel.send("xD")
+    elif message.content == "indeed":
+        await message.channel.send("INDEEEEED")
+    elif message.content == "!Image":
+        await message.channel.send(file=discord.File('Nightcore.png'))
+    ###############################
 
 
 
