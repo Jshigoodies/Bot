@@ -2,7 +2,7 @@ import discord
 import asyncio
 import time
 from discord.ext import commands
-token = "NzcyMTYwMTg2ODQ4MjQ3ODQ4.X52oNg.m03Eaiku9hFxsjp1bGSXhzzXxIU"
+token = ""
 
 ID = 692572871322632222
 messaged = joined = 0
