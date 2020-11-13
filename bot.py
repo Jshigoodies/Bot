@@ -28,6 +28,7 @@ async def update_stats():
             print(e)
             await asyncio.sleep(600) #10 minutes
 
+#member joins
 @client.event
 async def on_member_join(member):
     global joined
@@ -36,7 +37,7 @@ async def on_member_join(member):
         if(str(channel) == "general"): #if it's general
             await channel.send_message(f"""Welcome {member.mention}""") #welcome them
 
-
+#read messages
 @client.event
 async def on_message(message):
     global messaged
@@ -59,9 +60,15 @@ async def on_message(message):
     elif message.content == "indeed":
         await message.channel.send("INDEEEEED")
     elif message.content == "!Image":
-        await message.channel.send(file=discord.File('Nightcore.png'))
+        await message.channel.send(file=discord.File('meme.png'))
+    elif message.content == "!Leave":
+        toleave = client.get_server("363541040013115392")
+        await client.leave_server(toleave)
     ###############################
 
+@client.event
+async def on_member_update(before, after):
+    pass
 
 
 client.loop.create_task(update_stats()) #pretty sure this is a while loop for the client to run over and over again without stopping for the method update_stats()
