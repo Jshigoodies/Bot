@@ -1,8 +1,8 @@
 import discord
 import asyncio
 import time
-
-
+import random
+from discord import VoiceClient
 from discord.ext.commands import bot  # vc
 
 from discord.ext import commands
@@ -68,10 +68,6 @@ async def on_message(message):
         await message.channel.send(f"""# of Members: {id.member_count}""")
 
     ##############################
-    elif message.content == "!JoinBot":
-        await join(message)
-    elif message.content == "!LeaveBot":
-        await leave()
     elif message.content == "!Die":
         await message.channel.send("Plz wait")
         await asyncio.sleep(6)  # waits for 10 seconds
@@ -85,23 +81,31 @@ async def on_message(message):
         await client.leave_server(toleave)
     ###############################
 
+
 @client.event
 async def on_member_update(before, after):
     n = after.nick
-    if n: # Check if they updated their username
-        if n.lower().count("guy") > 0: # If username contains tim
+    if n:  # Check if they updated their username
+        if n.lower().count("guy") > 0:  # If username contains tim
             last = before.nick
-            if last: # If they had a usernae before change it back to that
+            if last:  # If they had a usernae before change it back to that
                 await after.edit(nick=last)
-            else: # Otherwise set it to "NO STOP THAT"
+            else:  # Otherwise set it to "NO STOP THAT"
                 await after.edit(nick="NO STOP THAT")
 
+
 #######################################################
+client = commands.Bot(command_prefix='.')
 
 
-async def join(ctx):
-    channel = ctx.author.voice.channel
-    await channel.connect()
+@client.command()
+async def ping(ctx):
+    await ctx.send("Pong")
+
+@client.command(aliases = ["8ball", "eightball"])
+async def _8ball(ctx, *, question):
+    responses = ["no", "yes", "maybe"]
+    await ctx.send(f"Question: {question}\nAnswser: {random.choice(responses)}")
 
 
 ##########################################################
