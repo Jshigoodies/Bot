@@ -1,43 +1,51 @@
 import discord
 import asyncio
 import time
+
+
+from discord.ext.commands import bot  # vc
+
 from discord.ext import commands
+
 token = ""
 
 ID = 692572871322632222
 messaged = joined = 0
 
-#____________________________________________________________
+# ____________________________________________________________
 client = discord.Client()
 
-async def update_stats():
-    await client.wait_until_ready() #method for class client
-    global messaged, joined #global, so it can be acessed everywhere
 
-    while not client.is_closed(): #while client is 'not' stopped (stopped as in i don't press the red button)
+async def update_stats():
+    await client.wait_until_ready()  # method for class client
+    global messaged, joined  # global, so it can be acessed everywhere
+
+    while not client.is_closed():  # while client is 'not' stopped (stopped as in i don't press the red button)
         try:
-            with open("stat.txt", "a") as f: #open stats.txt and stats.txt == 'f'
+            with open("stat.txt", "a") as f:  # open stats.txt and stats.txt == 'f'
                 f.write(f"Time: {int(time.time())}, Messages: {messaged}, Members Joined: {joined}\n")
 
-            messaged = 0 #reset variables
+            messaged = 0  # reset variables
             joined = 0
 
             await asyncio.sleep(600)
 
         except Exception as e:
             print(e)
-            await asyncio.sleep(600) #10 minutes
+            await asyncio.sleep(600)  # 10 minutes
 
-#member joins
+
+# member joins
 @client.event
 async def on_member_join(member):
     global joined
     joined = joined + 1
-    for channel in member.guild.channels: #for whatever channel joined
-        if(str(channel) == "general"): #if it's general
-            await channel.send_message(f"""Welcome {member.mention}""") #welcome them
+    for channel in member.guild.channels:  # for whatever channel joined
+        if (str(channel) == "general"):  # if it's general
+            await channel.send_message(f"""Welcome {member.mention}""")  # welcome them
 
-#read messages
+
+# read messages
 @client.event
 async def on_message(message):
     global messaged
@@ -45,17 +53,28 @@ async def on_message(message):
     id = client.get_guild(ID)
     channels = ["commands", "#nguyenthm-commands", "#nguyeneral"]
     valid_users = ["jshi#9154"]
-    #if str(message.channel) in channels and str(message.author) in valid_users: #if the message is in the commands channel and in the command channel, the messanger/author is one of the valid users, then it's true
-    if message.content.find("!hello") != -1: #finds it
-        await message.channel.send("Hi") #sends it
-    elif message.content == "!users": #sees if the message is the same
+
+    bad_words = ["fuck", "hate", "die"]
+
+    for word in bad_words:
+        if message.content.count(word) > 0:
+            print("A bad word was said")
+            await message.channel.purge(limit=1)
+
+    # if str(message.channel) in channels and str(message.author) in valid_users: #if the message is in the commands channel and in the command channel, the messanger/author is one of the valid users, then it's true
+    if message.content.find("!hello") != -1:  # finds it
+        await message.channel.send("Hi")  # sends it
+    elif message.content == "!users":  # sees if the message is the same
         await message.channel.send(f"""# of Members: {id.member_count}""")
 
-
     ##############################
+    elif message.content == "!JoinBot":
+        await join(message)
+    elif message.content == "!LeaveBot":
+        await leave()
     elif message.content == "!Die":
         await message.channel.send("Plz wait")
-        await asyncio.sleep(6) #waits for 10 seconds
+        await asyncio.sleep(6)  # waits for 10 seconds
         await message.channel.send("xD")
     elif message.content == "indeed":
         await message.channel.send("INDEEEEED")
@@ -68,8 +87,25 @@ async def on_message(message):
 
 @client.event
 async def on_member_update(before, after):
-    pass
+    n = after.nick
+    if n: # Check if they updated their username
+        if n.lower().count("guy") > 0: # If username contains tim
+            last = before.nick
+            if last: # If they had a usernae before change it back to that
+                await after.edit(nick=last)
+            else: # Otherwise set it to "NO STOP THAT"
+                await after.edit(nick="NO STOP THAT")
+
+#######################################################
 
 
-client.loop.create_task(update_stats()) #pretty sure this is a while loop for the client to run over and over again without stopping for the method update_stats()
+async def join(ctx):
+    channel = ctx.author.voice.channel
+    await channel.connect()
+
+
+##########################################################
+
+client.loop.create_task(
+    update_stats())  # pretty sure this is a while loop for the client to run over and over again without stopping for the method update_stats()
 client.run(token)
