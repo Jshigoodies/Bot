@@ -5,6 +5,8 @@ import random
 from discord import VoiceClient
 from discord.ext.commands import bot  # vc
 
+import youtube_dl
+
 from discord.ext import commands
 
 token = ""
@@ -107,6 +109,14 @@ async def _8ball(ctx, *, question):
     responses = ["no", "yes", "maybe"]
     await ctx.send(f"Question: {question}\nAnswser: {random.choice(responses)}")
 
+@client.command()
+async def join(ctx):
+    channel = ctx.author.voice.channel
+    await channel.connect()
+
+@client.command()
+async def leave(ctx):
+    await ctx.voice_client.disconnect()
 
 ##########################################################
 
