@@ -9,7 +9,7 @@ import youtube_dl
 
 from discord.ext import commands
 
-token = ""
+token = "NzcyMTYwMTg2ODQ4MjQ3ODQ4.X52oNg.m5VMcixgM1EnjlzWL3t-LEYACF4"
 
 ID = 692572871322632222
 messaged = joined = 0
@@ -102,7 +102,7 @@ client = commands.Bot(command_prefix='.')
 
 @client.command()
 async def ping(ctx):
-    await ctx.send("Pong")
+    await ctx.send(f"Pong! {round(client.latency * 1000)}ms")
 
 @client.command(aliases = ["8ball", "eightball"])
 async def _8ball(ctx, *, question):
