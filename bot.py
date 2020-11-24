@@ -9,7 +9,7 @@ import youtube_dl
 
 from discord.ext import commands
 
-token = "NzcyMTYwMTg2ODQ4MjQ3ODQ4.X52oNg.dLPJI7cI6njIPLT_i0j9SGDL9mo"
+token = ""
 
 ID = 692572871322632222
 messaged = joined = 0
