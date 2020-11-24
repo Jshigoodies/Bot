@@ -9,7 +9,7 @@ import youtube_dl
 
 from discord.ext import commands
 
-token = ""
+token = "NzcyMTYwMTg2ODQ4MjQ3ODQ4.X52oNg.dLPJI7cI6njIPLT_i0j9SGDL9mo"
 
 ID = 692572871322632222
 messaged = joined = 0
@@ -72,7 +72,7 @@ async def on_message(message):
     ##############################
     elif message.content == "!Die":
         await message.channel.send("Plz wait")
-        await asyncio.sleep(6)  # waits for 10 seconds
+        await asyncio.sleep(6)  # waits for 6 seconds
         await message.channel.send("xD")
     elif message.content == "indeed":
         await message.channel.send("INDEEEEED")
@@ -88,7 +88,7 @@ async def on_message(message):
 async def on_member_update(before, after):
     n = after.nick
     if n:  # Check if they updated their username
-        if n.lower().count("guy") > 0:  # If username contains tim
+        if n.lower().count("guy") > 0:  # If username contains guy
             last = before.nick
             if last:  # If they had a usernae before change it back to that
                 await after.edit(nick=last)
@@ -96,27 +96,44 @@ async def on_member_update(before, after):
                 await after.edit(nick="NO STOP THAT")
 
 
-#######################################################
+####################################################### the stuff above does not work because I'm doing another way to command a bot below (i think)
 client = commands.Bot(command_prefix='.')
+#most of the stuff down here is pretty self explanatory
+
+@client.event
+async def on_ready():
+    print("Bot is ready")
+
+@client.command()
+async def clear(ctx, amount = 2):
+    await ctx.channel.purge(limit=amount)
+
+@client.command(aliases=["h"])
+async def _help(ctx):
+    await ctx.send("h (help), ping, 8ball, join <- joins vc, leave <- leaves vc, clear (deletes the message above it)")
 
 
 @client.command()
 async def ping(ctx):
     await ctx.send(f"Pong! {round(client.latency * 1000)}ms")
 
-@client.command(aliases = ["8ball", "eightball"])
+
+@client.command(aliases=["8ball", "eightball"])
 async def _8ball(ctx, *, question):
     responses = ["no", "yes", "maybe"]
     await ctx.send(f"Question: {question}\nAnswser: {random.choice(responses)}")
+
 
 @client.command()
 async def join(ctx):
     channel = ctx.author.voice.channel
     await channel.connect()
 
+
 @client.command()
 async def leave(ctx):
     await ctx.voice_client.disconnect()
+
 
 ##########################################################
 
