@@ -7,7 +7,9 @@ from discord.ext.commands import bot  # vc
 
 import youtube_dl
 
-from discord.ext import commands
+from discord.ext import commands, tasks
+
+from random import choice
 
 token = ""
 
@@ -97,16 +99,29 @@ async def on_member_update(before, after):
 
 
 ####################################################### the stuff above does not work because I'm doing another way to command a bot below (i think)
+import youtube_dl
+
 client = commands.Bot(command_prefix='.')
-#most of the stuff down here is pretty self explanatory
+
+
+# most of the stuff down here is pretty self explanatory
 
 @client.event
 async def on_ready():
+    change_status.start()
     print("Bot is ready")
 
+
+status = ["Dead", "I feel the power of Anime", ":D :D :D"]
+
+@tasks.loop(seconds=20)
+async def change_status():
+    await client.change_presence(activity=discord.Game(choice(status)))
+
 @client.command()
-async def clear(ctx, amount = 2):
+async def clear(ctx, amount=2):
     await ctx.channel.purge(limit=amount)
+
 
 @client.command(aliases=["h"])
 async def _help(ctx):
@@ -133,6 +148,32 @@ async def join(ctx):
 @client.command()
 async def leave(ctx):
     await ctx.voice_client.disconnect()
+
+
+@client.command()
+async def kick(ctx, member: discord.Member, *,
+               reason=None):  # the '*' is so you can make the reason a sentence instead of a single word after taking in the arguemnts of the command name and discord member
+    await member.kick(reason=reason)
+
+
+@client.command()
+async def ban(ctx, member: discord.Member, *, reason=None):
+    await member.ban(reason=reason)
+    await ctx.send(f"Banned {member.mention}")
+
+
+@client.command()
+async def unban(ctx, *, member):
+    banned_users = await ctx.guild.bans()
+    member_name, member_id = member.split("#")
+
+    for ban_entry in banned_users:
+        user = ban_entry.user
+
+        if (user.name, user.discriminator) == (member_name, member_id):
+            await ctx.guild.unban(user)
+            await ctx.send(f"Unbanned {user.name}#{user.discriminator}. Very sorry {user.mention}")
+            break
 
 
 ##########################################################
