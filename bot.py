@@ -11,7 +11,7 @@ from discord.ext import commands, tasks
 
 from random import choice
 
-token = ""
+token = "" # for application BotBoy's token
 
 ID = 692572871322632222
 messaged = joined = 0
